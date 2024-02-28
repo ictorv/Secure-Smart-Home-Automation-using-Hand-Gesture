@@ -1,4 +1,7 @@
 resend==0.7.2
 python-dotenv
 pydantic
-
+face_recognition
+numpy
+tensorflow
+rpi-libcamera
