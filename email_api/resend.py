@@ -26,3 +26,6 @@ def resend_api(to_person: str, length=4):
     except:
         return ("Error", -999)
     pass
+
+if __name__ == "__main__":
+    print(resend_api("your_email@gmail.com"))
