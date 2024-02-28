@@ -1,11 +1,11 @@
-import os
 import resend
 import random
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
 
-resend.api_key = os.environ["RESEND_API_KEY"]
+resend.api_key = os.getenv("RESEND_API_KEY")
 
 def resend_api(to_person: str, length=4):
     try:
