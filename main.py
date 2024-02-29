@@ -104,6 +104,8 @@ while True:
 
 '''Recogniton and GPIO Control'''
 if verified:
+    subprocess.run(["libcamera-vid", "--codec", "libav", "-o", "test.mp4", "-t", "8000", "--width", "640", "--height", "480"])
+    cap=cv2.VideoCapture('test.mp4')
     while True:
         ret, frame = cap.read()
         if not ret:
