@@ -82,7 +82,6 @@ while True:
         # If a match is found, label the face
         if match[0]:
             loop=0 # For ending loop
-            verified=1 # To send flag that verified person want to access
             # cv2.putText(frame, "Known Face", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
             cap.release()
             cv2.destroyAllWindows()
@@ -90,8 +89,9 @@ while True:
                 code=resend_api("victor.myid@gmail.com")
                 check=int(input("Enter Verification Code:"))
                 if (code == check) and (code!=-999):
+                    verified=1 # To send flag that verified person want to access
                     print("Verification Completed!")
-            
+                    
     # Display the frame
     if loop:
         cv2.imshow('Video', frame)
