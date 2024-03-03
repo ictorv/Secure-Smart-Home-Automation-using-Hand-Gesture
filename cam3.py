@@ -60,11 +60,16 @@ while True:
                 x_min -= 20
                 x_max += 20
                 cv2.rectangle(frame, (x_min, y_min), (x_max, y_max), (0, 255, 0), 2)
-
-                analysisframe = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-                analysisframe = analysisframe[y_min:y_max, x_min:x_max]
-                analysisframe = cv2.resize(analysisframe, (28, 28))
-
+                
+                try:
+                    analysisframe = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                    analysisframe = analysisframe[y_min:y_max, x_min:x_max]
+                    analysisframe = cv2.resize(analysisframe, (28, 28))
+                except cv2.error as e:
+                    # print("Error:", e)
+                    print("Skipping frame due to resizing error.")
+                    continue  # Skip to the next iteration of the loop
+            
                 nlist = []
                 rows, cols = analysisframe.shape
                 for i in range(rows):
