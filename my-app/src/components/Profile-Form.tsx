@@ -51,7 +51,7 @@ export function ProfileForm() {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="shadcn" {...field} />
+                <Input placeholder="john doe" {...field} />
               </FormControl>
               <FormDescription>
                 This is your public display name.
