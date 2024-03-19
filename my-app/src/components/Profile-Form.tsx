@@ -1,6 +1,6 @@
 "use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -27,10 +27,14 @@ const formSchema = z.object({
 });
 
 export function ProfileForm() {
+  const [submittedUsername, setSubmittedUsername] = useState<string | null>(
+    null
+  );
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
+      email: "",
     },
   });
 
@@ -38,44 +42,71 @@ export function ProfileForm() {
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
+    setSubmittedUsername(values.username);
+    alert(JSON.stringify(values));
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="john doe" {...field} />
-              </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input placeholder="subhoghosh@yahoo.in" {...field} />
-              </FormControl>
-              <FormDescription>This is your email-id.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit">Submit</Button>
-      </form>
-    </Form>
+    <>
+      {submittedUsername ? (
+        <div>
+          Hi
+          <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+            {submittedUsername}
+          </h1>
+          <p className="leading-7 [&:not(:first-child)]:mt-6">Check out our </p>
+          <h2 className="mt-10 scroll-m-20 border-b text-yellow-200 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
+            gesture based automation project
+          </h2>
+          <p className="leading-7 [&:not(:first-child)]:mt-6">
+            Refer to our
+            <a
+              href="#"
+              className="font-medium text-sky-400 underline underline-offset-4"
+            >
+              {"   documentation"}
+            </a>
+            :{")"}
+          </p>
+        </div>
+      ) : (
+        <Form {...form}>
+          {" "}
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input placeholder="John Doe" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is your public display name.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="subhoghosh@yahoo.in" {...field} />
+                  </FormControl>
+                  <FormDescription>This is your email-id.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit">Submit</Button>
+          </form>
+        </Form>
+      )}
+    </>
   );
 }
