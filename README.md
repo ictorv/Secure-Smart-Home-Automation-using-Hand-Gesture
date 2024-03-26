@@ -1,21 +1,27 @@
 # Secure-Smart-Home-Automation-using-Hand-Gesture
+
 ```bash
 An IoT project for home Automation
 ```
+
 # Description of the Problem:
-Controlling home devices through hand gestures presents an  innovative and intuitive approach to home automation. This proposal aims to leverage advancements in computer vision and machine learning to develop a robust system enabling users to controlvarious home appliances through hand gestures.
+
+Controlling home devices through hand gestures presents an innovative and intuitive approach to home automation. This proposal aims to leverage advancements in computer vision and machine learning to develop a robust system enabling users to controlvarious home appliances through hand gestures.
 
 ## Project Flowchart
+
 ![Flowchart](https://github.com/ictorv/Secure-Smart-Home-Automation-using-Hand-Gesture/blob/main/resources/flowchart.png)
 
 ## Built With
+
 [![Python](https://img.shields.io/badge/python-3776AB?style=for-the-badge&logo=python&logoColor=ffdd54)](https://python.org/)
-![TensorFlow](https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=TensorFlow&logoColor=white) ![Keras](https://img.shields.io/badge/Keras-%23D00000.svg?style=for-the-badge&logo=Keras&logoColor=white) 
+![TensorFlow](https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=TensorFlow&logoColor=white) ![Keras](https://img.shields.io/badge/Keras-%23D00000.svg?style=for-the-badge&logo=Keras&logoColor=white)
 [![OpenCV](https://img.shields.io/badge/opencv-%230065F4.svg?style=for-the-badge&logo=opencv&logoColor=white)](https://opencv.org/)
 [![Resend](https://img.shields.io/badge/resend-%23000000.svg?style=for-the-badge&logo=resend&logoColor=white)](https://resend.com/)
 [![Raspberry Pi](https://img.shields.io/badge/raspberrypi-%23ff69b4.svg?style=for-the-badge&logo=raspberrypi&logoColor=white)](https://www.raspberrypi.org/)
 
 ## Hardware
+
 | Component                    |
 | ---------------------------- |
 | Raspberry Pi 4 Model B       |
@@ -29,8 +35,11 @@ Controlling home devices through hand gestures presents an  innovative and intui
 | SD Card                      |
 | Micro HDMI to HDMI cable     |
 
+##Run server
+uvicorn up:app --port 8001
 
 ## Built By
+
 <table>
 <tr>
     <td align="center">
