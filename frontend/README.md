@@ -14,6 +14,7 @@ pnpm dev
 bun dev
 ```
 
+Raspi-192.168.99.1 2409:40e0:d:5525:36fe:515d:f757:770b
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.

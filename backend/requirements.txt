@@ -57,6 +57,7 @@ python-multipart==0.0.9
 PyYAML==6.0.1
 regex==2023.12.25
 requests==2.31.0
+resend==0.8.0
 rich==13.7.1
 safetensors==0.4.2
 scipy==1.12.0
@@ -71,6 +72,7 @@ tensorflow-intel==2.16.1
 tensorflow-io-gcs-filesystem==0.31.0
 tensorstore==0.1.56
 termcolor==2.4.0
+tf_keras==2.16.0
 tokenizers==0.15.2
 toolz==0.12.1
 torch==2.2.1

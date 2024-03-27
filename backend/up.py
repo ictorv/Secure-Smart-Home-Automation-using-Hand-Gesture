@@ -17,7 +17,7 @@ import gesture_detect
 IMAGEDIR = "images/"
 FACEDIR = "faces/"
 PHOTODIR = "photos/"
-
+RASPDIR = "raspi-images/"
 
 class UserDetails(BaseModel):
     email: str
@@ -235,3 +235,22 @@ async def verify_otp(username: str, otp: str):
     finally:
         cursor.close()
         sqliteConnection.close()
+
+
+
+@app.post("/gesture-detect-video/")
+async def upload_r(file: UploadFile = File(...)):
+ 
+    file.filename = f"{uuid.uuid4()}.jpg"
+    contents = await file.read()
+ 
+    #save the file
+    with open(f"{RASPDIR}{file.filename}", "wb") as f:
+        f.write(contents)
+
+    # filename = f"{uuid.uuid4()}.jpeg"
+    # b64.save_base64_image(base64_str,f"{RASPDIR}{filename}")
+    rasp_files = os.listdir(RASPDIR)
+    rasp_path = f"{RASPDIR}{rasp_files[0]}"
+    prediction=gesture_detect.gesture_recognizer(rasp_path)
+    return {"gesture": prediction}
