@@ -4,7 +4,7 @@ export function Footer() {
   return (
     <ResizablePanelGroup
       direction="vertical"
-      className="min-h-[100px] max-w-full rounded-lg border"
+      className="min-h-[100px] max-w-full rounded-lg border bg-gradient-to-r from-slate-800 to-slate-950 text-white text-sm sm:text-base"
     >
       <ResizablePanel>
         <div className="flex h-full items-center justify-center p-6">

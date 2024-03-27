@@ -1,4 +1,6 @@
 "use client";
+import { Footer } from "@/components/Footer";
+import { Header } from "@/components/Header";
 import { NewTab } from "@/components/NewTab";
 import {
   ResizableHandle,
@@ -9,22 +11,28 @@ import React from "react";
 
 const User: React.FC = () => {
   return (
-    <ResizablePanelGroup
-      direction="horizontal"
-      className="min-h-[340px] max-w-full rounded-lg border"
-    >
-      <ResizablePanel defaultSize={33}>
-        <div className="flex h-full items-center justify-center p-6">docs</div>
-      </ResizablePanel>
-      <ResizableHandle />
-      <ResizablePanel defaultSize={33}>
-        <div className="flex h-full items-center justify-center p-6">
-          {/* <Register />
-           */}
-          <NewTab />
-        </div>
-      </ResizablePanel>
-    </ResizablePanelGroup>
+    <main className="max-h-full max-w-fit flex flex-col bg-gradient-to-r from-slate-800 to-slate-950 text-white text-sm sm:text-base">
+      <Header />
+      <ResizablePanelGroup
+        direction="horizontal"
+        className=" rounded-lg border"
+      >
+        <ResizablePanel defaultSize={33}>
+          <div className="flex h-full items-center justify-center p-6">
+            docs
+          </div>
+        </ResizablePanel>
+        <ResizableHandle />
+        <ResizablePanel defaultSize={33}>
+          <div className="flex h-full items-center justify-center p-6">
+            {/* <Register />
+             */}
+            <NewTab />
+          </div>
+        </ResizablePanel>
+      </ResizablePanelGroup>
+      <Footer />
+    </main>
   );
 };
 

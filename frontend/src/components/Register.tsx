@@ -1,13 +1,13 @@
 "use client";
+import axios from "axios";
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-
-const Register: React.FC<> = () => {
+const Register: React.FC = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  // const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,32 +25,27 @@ const Register: React.FC<> = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
-    setError(null);
+    // setError(null);
     try {
-      // Make API call here, replace 'YOUR_API_ENDPOINT' with your actual endpoint
-      const response = await fetch("http://127.0.0.1:8000/submit-form/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username,
-          email,
-          password,
-        }),
+      const response = await axios.post("http://127.0.0.1:8001/insert/", {
+        email: email,
+        username: username,
+        password: password,
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to register");
-      }
-
-      setSuccess(true);
-      switchToSnapTab();
-    } catch (error) {
-      setError(error.message || "Failed to register");
-    } finally {
       setLoading(false);
+      setSuccess(true);
+      console.log("Response from server:", response.data);
+      // Optionally, reset the form fields after successful submission
+      setUsername("");
+      setEmail("");
+      setPassword("");
+    } catch (error) {
+      console.error("Error:", error);
+      // setError(error)
+      // Handle error here, e.g., display an error message to the user
     }
+
+    // setSuccess(true);
   };
 
   return (
@@ -62,7 +57,7 @@ const Register: React.FC<> = () => {
         </CardDescription> */}
       </CardHeader>
       <CardContent className="space-y-2 ">
-        <div className="w-full max-w-md my-5 mx-auto">
+        <div className=" max-w-md my-5 mx-auto">
           <form
             className="bg-slate-50 shadow-md border-t-primary border-t-4 rounded px-8 pt-6 pb-8 mb-4"
             onSubmit={handleSubmit}
@@ -124,12 +119,11 @@ const Register: React.FC<> = () => {
                 type="submit"
                 disabled={loading}
               >
-                {" "}
                 {loading ? "Loading..." : success ? "Success" : "Sign Up"}
               </button>
-              {error && (
+              {/* {error && (
                 <p className="text-red-500 space-x-3 text-xs italic">{error}</p>
-              )}
+              )}  */}
             </div>
           </form>
         </div>

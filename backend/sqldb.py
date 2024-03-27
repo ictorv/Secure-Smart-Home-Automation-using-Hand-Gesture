@@ -10,9 +10,9 @@ def createTable():
     cursor_obj.execute("DROP TABLE IF EXISTS USER")
 
     table = """ CREATE TABLE USER (
-    Email VARCHAR(255) UNIQUE NOT NULL,
+    Email VARCHAR(255)  NOT NULL,
     User_Name CHAR(25) UNIQUE NOT NULL,
-    Password CHAR(25));
+    Password CHAR(25) NOT NULL);
  """
  
     cursor_obj.execute(table)
@@ -21,7 +21,7 @@ def createTable():
  
 # Close the connection
     connection_obj.close()
-
+# createTable()
 def insertDetails(email,username,password): 
 	try: 
 		
@@ -50,11 +50,11 @@ def insertDetails(email,username,password):
 		if sqliteConnection: 
 			sqliteConnection.close() 
 			print("the sqlite connection is closed") 
-createTable()
-# insertDetails("abc@yahoo.in","Smith","998") //example
+# //example
+# insertDetails("adityadattaofficial@gmail.com","Aditya","998") 
 # insertBLOB("David.in","kum","34")
 
-
+# insertDetails("adityadattaofficial@gmail.com","Abir","9w98")
 def retrieveUserDetails(username):
     try:
         # Connect to the SQLite database
@@ -84,7 +84,7 @@ def retrieveUserDetails(username):
         return {"error": "Failed to retrieve user details", "details": str(error)}
 
 # Example usage:
-# userDetails = retrieveUserDetails("someusername")
-# print(userDetails)
+userDetails = retrieveUserDetails("Rohan")
+print(userDetails)
 
 

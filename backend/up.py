@@ -1,22 +1,33 @@
 #upload/main.py
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile,HTTPException
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
-
+from pydantic import BaseModel
 from fastapi.staticfiles import StaticFiles
+import email_send
 import os
-import io
+import sqlite3
 import b64
-import base64, binascii
-from random import randint
+import sqldb
 import uuid
-from PIL import Image
+
 import face_recognition_handler
 import gesture_detect
 
 IMAGEDIR = "images/"
 FACEDIR = "faces/"
 PHOTODIR = "photos/"
+
+
+class UserDetails(BaseModel):
+    email: str
+    username: str
+    password: str
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
 app = FastAPI()
 origins = [
     "http://localhost.tiangolo.com",
@@ -122,3 +133,105 @@ async def uploadb_photo(base64_str: str):
 
 
 
+
+
+@app.post("/insert/")
+async def insert_details(user_details: UserDetails):
+    try:
+        # Connect to SQLite database
+        sqldb.insertDetails(user_details.email,user_details.username,user_details.password)
+
+        return {"message": "Details inserted into the table"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+
+    
+
+
+
+@app.get("/user/{username}")
+async def retrieve_user_details(username: str):
+    try:
+        # Connect to the SQLite database
+        sqliteConnection = sqlite3.connect('sql.db')
+        cursor = sqliteConnection.cursor()
+
+        # Retrieve user details from the database
+        cursor.execute("SELECT * FROM User WHERE User_Name=?", (username,))
+        user_details = cursor.fetchone()
+
+        # Close the cursor and connection
+        cursor.close()
+        sqliteConnection.close()
+
+        # Check if user exists
+        if user_details:
+            email, user_name, password = user_details
+            return {
+                "Email": email,
+                "Username": user_name,
+                "Password": password
+            }
+        else:
+            raise HTTPException(status_code=404, detail="User not found")
+
+    except sqlite3.Error as error:
+        raise HTTPException(status_code=500, detail=f"Failed to retrieve user details: {str(error)}")
+    
+
+
+@app.post("/login/")
+async def login(login_request: LoginRequest):
+    try:
+        # Connect to the SQLite database
+        sqliteConnection = sqlite3.connect('sql.db')
+        cursor = sqliteConnection.cursor()
+
+        # Retrieve user details from the database
+        cursor.execute("SELECT * FROM User WHERE User_Name=?", (login_request.username,))
+        user_details = cursor.fetchone()
+
+        # Close the cursor and connection
+        cursor.close()
+        sqliteConnection.close()
+
+        # Check if user exists and password matches
+        if user_details:
+            email, user_name, stored_password = user_details
+            if login_request.password == stored_password:
+                otp=email_send.send_email()
+                
+
+                return {"message": otp}
+            else:
+                raise HTTPException(status_code=401, detail="Incorrect password")
+        else:
+            raise HTTPException(status_code=404, detail="User not found")
+
+    except sqlite3.Error as error:
+        raise HTTPException(status_code=500, detail=f"Failed to perform login: {str(error)}")
+    
+
+@app.post("/verify-otp/")
+async def verify_otp(username: str, otp: str):
+    try:
+        # Connect to the SQLite database
+        sqliteConnection = sqlite3.connect('sql.db')
+        cursor = sqliteConnection.cursor()
+
+        # Retrieve user details from the database
+        cursor.execute("SELECT OTP FROM User WHERE User_Name=?", (username,))
+        stored_otp = cursor.fetchone()
+
+        # Check if OTP matches
+        if stored_otp and otp == stored_otp[0]:
+            return {"message": otp}
+        else:
+            raise HTTPException(status_code=401, detail="Incorrect OTP")
+
+    except sqlite3.Error as error:
+        raise HTTPException(status_code=500, detail=f"Failed to verify OTP: {str(error)}")
+    finally:
+        cursor.close()
+        sqliteConnection.close()
