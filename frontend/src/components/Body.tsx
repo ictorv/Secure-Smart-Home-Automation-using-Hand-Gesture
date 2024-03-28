@@ -6,6 +6,8 @@ import Webcam from "react-webcam";
 import Loader from "./Loader";
 export function Body() {
   const webcamRef = useRef(null);
+  const [response, setResponse] = useState(null);
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(""); // Define image state
   const [verify, setVerify] = useState("not-yet-verified");
@@ -32,8 +34,20 @@ export function Body() {
       setLoading(false);
       if (response.data.message === "matched!") {
         setVerify("image matched! Session activated!");
+        try {
+          const result = await axios.get(`/api/answer/yes`);
+          setResponse(result.data);
+        } catch (error) {
+          setError("error");
+        }
       } else {
         setVerify("image not matched! You're not verified!");
+        try {
+          const result = await axios.get(`/api/answer/no`);
+          setResponse(result.data);
+        } catch (error) {
+          setError("error");
+        }
       }
     } catch (error) {
       console.error("Error:", error);
