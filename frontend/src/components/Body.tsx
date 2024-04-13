@@ -16,42 +16,43 @@ export function Body() {
   };
 
   const capture = useCallback(async () => {
-    const imageSrc = webcamRef.current.getScreenshot({
-      width: 200,
-      height: 200,
-    });
-    setImage(imageSrc);
-    console.log(imageSrc);
-    const encodedString = encodeURIComponent(imageSrc);
-    // console.log(encodedString);
-    setLoading(true);
-
-    try {
-      const response = await axios.get(
-        `http://127.0.0.1:8001/face-verification/?base64_str=${encodedString}`
-      );
-      alert(response.data.message);
-      setLoading(false);
-      if (response.data.message === "matched!") {
-        setVerify("image matched! Session activated!");
-        try {
-          const result = await axios.get(`/api/answer/yes`);
-          setResponse(result.data);
-        } catch (error) {
-          setError("error");
+    if (webcamRef.current) {
+      const imageSrc = webcamRef.current.getScreenshot({
+        width: 200,
+        height: 200,
+      });
+      setImage(imageSrc);
+      console.log(imageSrc);
+      const encodedString = encodeURIComponent(imageSrc);
+      // console.log(encodedString);
+      setLoading(true);
+      try {
+        const response = await axios.get(
+          `http://127.0.0.1:8001/face-verification/?base64_str=${encodedString}`
+        );
+        alert(response.data.message);
+        setLoading(false);
+        if (response.data.message === "matched!") {
+          setVerify("image matched! Session activated!");
+          try {
+            const result = await axios.get(`/api/answer/yes`);
+            setResponse(result.data);
+          } catch (error) {
+            setError("error");
+          }
+        } else {
+          setVerify("image not matched! You're not verified!");
+          try {
+            const result = await axios.get(`/api/answer/no`);
+            setResponse(result.data);
+          } catch (error) {
+            setError("error");
+          }
         }
-      } else {
-        setVerify("image not matched! You're not verified!");
-        try {
-          const result = await axios.get(`/api/answer/no`);
-          setResponse(result.data);
-        } catch (error) {
-          setError("error");
-        }
+      } catch (error) {
+        console.error("Error:", error);
+        setVerify("face not captured properly");
       }
-    } catch (error) {
-      console.error("Error:", error);
-      setVerify("face not captured properly");
     }
   }, [webcamRef]);
 

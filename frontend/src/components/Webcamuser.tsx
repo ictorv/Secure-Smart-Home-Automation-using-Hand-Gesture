@@ -18,26 +18,28 @@ const Webcamuser = () => {
 
   // create a capture function
   const capture = useCallback(async () => {
-    const imageSrc = webcamRef.current.getScreenshot();
-    setImgSrc(imageSrc);
-    console.log(imageSrc);
-    const encodedString = encodeURIComponent(imageSrc);
-    // console.log(encodedString);
+    if (webcamRef.current) {
+      const imageSrc = webcamRef.current.getScreenshot();
+      setImgSrc(imageSrc);
+      console.log(imageSrc);
+      const encodedString = encodeURIComponent(imageSrc);
+      // console.log(encodedString);
 
-    try {
-      const response = await axios.get(
-        `http://127.0.0.1:8001/upload-image-base/?base64_str=${encodedString}`
-      );
-      alert(response.data);
-      // setLoading(false);
-      // if (response.data.message === "matched!") {
-      //   // setVerify("image matched! You're verified!");
-      // } else {
-      //   // setVerify("image not matched! You're not verified!");
-      // }
-    } catch (error) {
-      console.error("Error:", error);
-      // setVerify("face not captured properly");
+      try {
+        const response = await axios.get(
+          `http://127.0.0.1:8001/upload-image-base/?base64_str=${encodedString}`
+        );
+        alert(response.data);
+        // setLoading(false);
+        // if (response.data.message === "matched!") {
+        //   // setVerify("image matched! You're verified!");
+        // } else {
+        //   // setVerify("image not matched! You're not verified!");
+        // }
+      } catch (error) {
+        console.error("Error:", error);
+        // setVerify("face not captured properly");
+      }
     }
   }, [webcamRef]);
   const notify = () => {
