@@ -14,7 +14,7 @@ export function ProfileForm() {
   // const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(" ");
   const [success, setSuccess] = useState(false);
   const [otp, setOTP] = useState("");
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,12 +41,10 @@ export function ProfileForm() {
       setOTP(response.data.message);
       setUsername("");
       setPassword("");
-    } catch (error) {
+    } catch (error: any) {
       alert(error);
-      setError(error.error);
+      setError((error as { error: string }).error); // Assertion to access the 'error' property
       console.error("Error:", error);
-      // setError(error)
-      // Handle error here, e.g., display an error message to the user
     }
   };
 
