@@ -7,28 +7,16 @@ import json
 import gesture_detect
 import numpy as np
 from picamera2 import Picamera2
+import requests
 
 import RPi.GPIO as GPIO
 
 gesture_classes = [
-    "call",
-    "dislike",
-    "fist",
-    "four",
-    "like",
-    "mute",
-    "ok",
-    "one",
-    "palm",
-    "peace",
-    "peace_inverted",
-    "rock",
-    "stop",
-    "stop_inverted",
-    "three",
-    "three2",
-    "two_up",
-    "two_up_inverted"
+    'palm',
+    'ok',
+    'peace_inverted',
+    'two_up_inverted',
+    'rock'
 ]
 
 
@@ -53,25 +41,47 @@ picam2.preview_configuration.align()
 picam2.configure("preview")
 picam2.start()
 
-while True:
+SERVER_BASE_URL = 'http://127.0.0.1:8001'
 
-        frame= picam2.capture_array()
-        cv2.imshow('Camera', frame)
-        # gesture_class = recognize_gesture(frame)
-        image = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR) #converting frame to image
-        # gesture_class = face_recognition_handler.recognize_face(frame)
-        gesture_class = gesture_detect.gesture_recognizer(image)
-        prediction_dict = json.loads(gesture_class)
+def capture_and_average_frames():
+    frames = []
+    for _ in range(7):
+        frame = picam2.capture_array()
+        frames.append(frame)
+    averaged_frame = np.mean(frames, axis=0).astype(np.uint8)
+    return averaged_frame
 
-        # Extract the gesture class
-        gesture_class = prediction_dict["Prediction"]
-        if gesture_class=="palm":
-            GPIO.output(11,True)
+def send_image_to_server(image):
+    url = f'{SERVER_BASE_URL}/predict/inference_server'
+    files = {'file': ('image.jpg', image, 'multipart/form-data')}
+    response = requests.post(url, files=files)
+    return response.json()
+
+try:
+    while True:
+        averaged_frame = capture_and_average_frames()
+        cv2.imshow('Camera', averaged_frame)
+
+        # Convert the frame to JPEG format
+        _, image = cv2.imencode('.jpg', averaged_frame)
+        response = send_image_to_server(image)
+
+        # Extract the gesture class and score from the response
+        gesture_class = response.get('label')
+        score = response.get('score')
+
+        # Process the gesture class
+        if gesture_class == "palm":
+            GPIO.output(11, True)
         else:
-            GPIO.output(11,False)
+            GPIO.output(11, False)
 
         print("Recognized Class:", gesture_class)
+        print("Score:", score)
+
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-cv2.destroyAllWindows()
-
+finally:
+    picam2.stop()
+    GPIO.cleanup()
+    cv2.destroyAllWindows()
