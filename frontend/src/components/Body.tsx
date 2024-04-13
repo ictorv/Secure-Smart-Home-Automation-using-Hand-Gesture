@@ -72,7 +72,7 @@ export function Body() {
             videoConstraints={videoConstraints}
           />
         ) : (
-          <img src={image} height={200} width={200} alt="Captured" />
+          <img src={image!} height={200} width={200} alt="Captured" />
         )}
 
         {image === "" && (
