@@ -13,32 +13,34 @@ import {
   CardTitle,
 } from "./ui/card";
 const Webcamuser = () => {
-  const webcamRef = useRef(null);
-  const [imgSrc, setImgSrc] = useState(null);
+  const webcamRef = useRef<Webcam>(null);
+  const [imgSrc, setImgSrc] = useState<string | null>(null);
 
   // create a capture function
   const capture = useCallback(async () => {
     if (webcamRef.current) {
-      const imageSrc = webcamRef.current.getScreenshot();
+      const imageSrc = webcamRef.current?.getScreenshot();
       setImgSrc(imageSrc);
       console.log(imageSrc);
-      const encodedString = encodeURIComponent(imageSrc);
-      // console.log(encodedString);
+      if (imageSrc) {
+        const encodedString = encodeURIComponent(imageSrc);
+        // console.log(encodedString);
 
-      try {
-        const response = await axios.get(
-          `http://127.0.0.1:8001/upload-image-base/?base64_str=${encodedString}`
-        );
-        alert(response.data);
-        // setLoading(false);
-        // if (response.data.message === "matched!") {
-        //   // setVerify("image matched! You're verified!");
-        // } else {
-        //   // setVerify("image not matched! You're not verified!");
-        // }
-      } catch (error) {
-        console.error("Error:", error);
-        // setVerify("face not captured properly");
+        try {
+          const response = await axios.get(
+            `http://127.0.0.1:8001/upload-image-base/?base64_str=${encodedString}`
+          );
+          alert(response.data);
+          // setLoading(false);
+          // if (response.data.message === "matched!") {
+          //   // setVerify("image matched! You're verified!");
+          // } else {
+          //   // setVerify("image not matched! You're not verified!");
+          // }
+        } catch (error) {
+          console.error("Error:", error);
+          // setVerify("face not captured properly");
+        }
       }
     }
   }, [webcamRef]);
